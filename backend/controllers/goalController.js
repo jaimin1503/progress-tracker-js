@@ -28,3 +28,33 @@ export const newGoal = async (req, res) => {
     });
   }
 };
+
+export const updateStatus = async (req, res) => {
+  const { goalId, type, subjectIndex, topicIndex } = req.params;
+  const newStatus = req.body.newStatus;
+
+  try {
+    const goal = await Goal.findById(goalId);
+
+    if (!goal) {
+      return res.status(404).json({ message: "Goal not found" });
+    }
+
+    // Update status based on type
+    if (type === "subject") {
+      goal.subjects[subjectIndex].status = newStatus;
+    } else if (type === "topic") {
+      goal.subjects[subjectIndex].topics[topicIndex].status = newStatus;
+    } else {
+      return res.status(400).json({ message: "Invalid type" });
+    }
+
+    // Save the updated goal
+    await goal.save();
+
+    return res.json({ message: "Status updated successfully", goal });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};

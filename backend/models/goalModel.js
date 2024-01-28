@@ -37,6 +37,7 @@ const goalSchema = new mongoose.Schema({
   subjects: [subjectSchema],
   dueDate: {
     type: Date,
+    required: true,
   },
 });
 
