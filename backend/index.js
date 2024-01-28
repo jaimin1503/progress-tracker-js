@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import "dotenv/config";
 import userRoutes from "./routes/userRoutes.js";
+import goalRoutes from "./routes/goalRoutes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -19,6 +20,7 @@ app.use(
 );
 
 app.use("/user", userRoutes);
+app.use("/goal", goalRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello, World");

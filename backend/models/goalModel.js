@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const taskSchema = new mongoose.Schema({
+const topicSchema = new mongoose.Schema({
   title: {
     type: String,
     trim: true,
@@ -13,14 +13,28 @@ const taskSchema = new mongoose.Schema({
   },
 });
 
+const subjectSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    trim: true,
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ["Done", "Review", "Pending"],
+    default: "Pending",
+  },
+  topics: [topicSchema],
+});
+
 const goalSchema = new mongoose.Schema({
   title: {
     type: String,
     trim: true,
     required: true,
   },
-  descriptiion: { type: String },
-  tasks: [taskSchema],
+  description: { type: String },
+  subjects: [subjectSchema],
   dueDate: {
     type: Date,
   },
