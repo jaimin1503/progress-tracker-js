@@ -1,4 +1,15 @@
+import { useRecoilValue } from "recoil";
+import SideBar from "../components/SideBar";
+import { isopenState } from "../atoms/todoAtom";
+
 const HomePage = () => {
-  return <div>HomePage</div>;
+  const isOpen = useRecoilValue(isopenState);
+  console.log(isOpen);
+  console.log("home render");
+  return (
+    <div>
+      <SideBar />
+    </div>
+  );
 };
 export default HomePage;
