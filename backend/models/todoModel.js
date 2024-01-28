@@ -9,7 +9,7 @@ const todoSchema = new mongoose.Schema(
     content: {
       type: String,
     },
-    status: {
+    completed: {
       type: Boolean,
       default: false,
     },
