@@ -8,7 +8,7 @@ export const auth = (req, res, next) => {
       return res.status(401).json({
         success: false,
         message: "token missing",
-      });
+      });a
     }
     try {
       const decode = jwt.verify(token, process.env.JWT_SECRET);
