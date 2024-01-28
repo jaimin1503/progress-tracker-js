@@ -1,14 +1,21 @@
 import { useRecoilValue } from "recoil";
 import SideBar from "../components/SideBar";
-import { isopenState } from "../atoms/todoAtom";
+import { isOpenState } from "../atoms/todoAtom";
+import TodoBlock from "../components/TodoBlock";
+import GoalBlock from "../components/GoalBlock";
 
 const HomePage = () => {
-  const isOpen = useRecoilValue(isopenState);
-  console.log(isOpen);
+  const isOpen = useRecoilValue(isOpenState);
+
   console.log("home render");
+
   return (
     <div>
-      <SideBar />
+      <div className=" flex">
+        <SideBar />
+        {isOpen === "TodoBlock" && <TodoBlock />}
+        {isOpen === "GoalBlock" && <GoalBlock />}
+      </div>
     </div>
   );
 };
