@@ -11,20 +11,21 @@ const TodoBlock = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5555/user/gettodos")
+      .get("http://localhost:5555/user/gettodos", { withCredentials: true })
       .then((res) => {
         setTodos(res.data.todos);
       })
       .catch(console.error());
   }, []);
+  console.log(todos);
   return (
     <div>
       <div className="todo-card border rounded-2xl bg-blue-100 h-[500px] w-[370px] flex flex-col ">
         <div className="title border-b border-gray-600 w-full flex justify-center">
-          <h1 className=" text-3xl my-1 ">{todos.title}</h1>
+          <h1 className=" text-3xl my-1 ">{todos?.title}</h1>
         </div>
         <div className="tasks flex p-5">
-          {todos.map((todo) => {
+          {/* {todos?.map((todo) => {
             <div key={todo._id}>
               <input type="checkbox" id="cbtest" />
               <input
@@ -33,7 +34,7 @@ const TodoBlock = () => {
                 onChange={handleInputChange}
               />
             </div>;
-          })}
+          })} */}
         </div>
       </div>
     </div>

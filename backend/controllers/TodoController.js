@@ -115,6 +115,8 @@ export const getTodos = async (req, res) => {
       model: "Todo",
     });
 
+    console.log(user);
+
     if (!user) {
       return res.status(404).json({
         success: false,
