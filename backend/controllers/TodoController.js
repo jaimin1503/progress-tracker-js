@@ -1,29 +1,50 @@
 import Todo from "../models/todoModel.js";
+import User from "../models/userModel.js";
 
 export const newTodo = async (req, res) => {
   try {
-    const { title, content, completed } = req.body;
-    if (!(title && content)) {
-      res.status(400).json({
+    const userId = req.user.userid;
+    const { title, tasks } = req.body;
+
+    if (!(userId && title && tasks)) {
+      return res.status(400).json({
         success: false,
-        message: `please fill all the details`,
+        message: "Please provide user ID, title, and tasks for the new todo.",
       });
-      return;
     }
+
+    // Check if the user exists
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Create a new todo
     const todo = await Todo.create({
       title,
-      content,
-      completed,
+      tasks,
     });
+
+    // Associate the new todo with the user
+    const updateUser = await User.findOneAndUpdate(
+      { _id: userId }, // Assuming profileid is the ID of the profile document you want to update
+      { $push: { todos: todo } }, // Corrected $push syntax
+      { new: true }
+    );
+
     return res.status(200).json({
       success: true,
-      message: "todo created success fully ",
+      message: "Todo created successfully and associated with the user.",
       todo,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: `something went wrong while creating todo and error is ${error}`,
+      message: `Something went wrong while creating todo and associating with user, and the error is ${error}`,
     });
   }
 };
@@ -46,18 +67,15 @@ export const deleteTodo = async (req, res) => {
 export const editTodo = async (req, res) => {
   const id = req.params.todoid;
   try {
-    const { title, content, completed } = req.body;
+    const { title, tasks } = req.body;
     const todo = await Todo.findById(id);
     if (todo) {
       const newTodo = {};
       if (title) {
         newTodo.title = title;
       }
-      if (content) {
-        newTodo.content = content;
-      }
-      if (completed) {
-        newTodo.completed = completed;
+      if (tasks) {
+        newTodo.tasks = tasks;
       }
 
       const updatedTodo = await Todo.findByIdAndUpdate(id, newTodo, {
@@ -65,8 +83,8 @@ export const editTodo = async (req, res) => {
       });
       return res.status(200).json({
         success: true,
-        message: "todo updated successfully",
-        profile: updatedTodo,
+        message: "Todo updated successfully",
+        todo: updatedTodo,
       });
     } else {
       return res.status(404).json({
@@ -77,7 +95,42 @@ export const editTodo = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: `something went wrong while editing todo and error is ${error}`,
+      message: `Something went wrong while editing todo, and the error is ${error}`,
+    });
+  }
+};
+
+export const getTodos = async (req, res) => {
+  try {
+    const userId = req.user.userid;
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is missing in the request.",
+      });
+    }
+
+    const user = await User.findById(userId).populate({
+      path: "todos",
+      model: "Todo",
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "All todos fetched successfully.",
+      todos: user.todos,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `Something went wrong while getting todos: ${error}`,
     });
   }
 };

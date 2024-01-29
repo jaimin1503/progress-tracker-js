@@ -1,18 +1,23 @@
 import mongoose from "mongoose";
 
+const taskSchema = new mongoose.Schema({
+  content: {
+    type: String,
+    required: true,
+  },
+  done: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const todoSchema = new mongoose.Schema(
   {
     title: {
       type: String,
       trim: true,
     },
-    content: {
-      type: String,
-    },
-    completed: {
-      type: Boolean,
-      default: false,
-    },
+    tasks: [taskSchema],
   },
   { timestamps: true }
 );
