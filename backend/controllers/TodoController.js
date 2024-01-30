@@ -112,7 +112,10 @@ export const getTodos = async (req, res) => {
     }
 
     const user = await User.findById(userId)
-      .populate({ path: "todos", model: "Todo" })
+      .populate({
+        path: "todos",
+        model: "Todo",
+      })
       .lean();
 
     if (!user) {
@@ -121,7 +124,6 @@ export const getTodos = async (req, res) => {
         message: "User not found.",
       });
     }
-
     return res.status(200).json({
       success: true,
       message: "All todos fetched successfully.",
