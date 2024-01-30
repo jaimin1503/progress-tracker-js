@@ -111,9 +111,9 @@ export const getTodos = async (req, res) => {
       });
     }
 
-    const user = await User.findById(userId).populate("todos").lean();
-
-    console.log(user);
+    const user = await User.findById(userId)
+      .populate({ path: "todos", model: "Todo" })
+      .lean();
 
     if (!user) {
       return res.status(404).json({
@@ -125,7 +125,7 @@ export const getTodos = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "All todos fetched successfully.",
-      todos: user,
+      todos: user.todos,
     });
   } catch (error) {
     return res.status(500).json({
