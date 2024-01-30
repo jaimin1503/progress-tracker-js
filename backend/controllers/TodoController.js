@@ -64,6 +64,7 @@ export const deleteTodo = async (req, res) => {
     });
   }
 };
+
 export const editTodo = async (req, res) => {
   const id = req.params.todoid;
   try {
@@ -110,10 +111,7 @@ export const getTodos = async (req, res) => {
       });
     }
 
-    const user = await User.findById(userId).populate({
-      path: "todos",
-      model: "Todo",
-    });
+    const user = await User.findById(userId).populate("todos").lean();
 
     console.log(user);
 
@@ -127,7 +125,7 @@ export const getTodos = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "All todos fetched successfully.",
-      todos: user.todos,
+      todos: user,
     });
   } catch (error) {
     return res.status(500).json({

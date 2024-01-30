@@ -15,7 +15,9 @@ const TodoBlock = () => {
       .then((res) => {
         setTodos(res.data.todos);
       })
-      .catch(console.error());
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
   console.log(todos);
   return (
