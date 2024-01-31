@@ -21,22 +21,22 @@ const TodoBlock = () => {
   }, []);
 
   return (
-    <div className=" flex justify-between">
+    <div className=" flex mt-20">
       {todos.map((todo) => (
         <div
           key={todo._id}
-          className="todo-card border rounded-2xl h-[500px] w-[370px] flex flex-col "
+          className="todo-card border rounded-2xl h-[400px] w-[350px] flex flex-col mx-5 bg-blue-100"
         >
-          <div className="title border-b border-gray-600 w-full flex justify-center">
+          <div className="title border-b border-gray-600 w-full flex justify-center bg-yellow-300 rounded-t-2xl">
             <h1 className=" text-3xl my-1 ">{todo?.title}</h1>
           </div>
           <div className="tasks flex flex-col p-5">
-            {todos.map((todo) => (
-              <div key={todo._id}>
+            {todo?.tasks.map((task) => (
+              <div key={task?._id}>
                 <input type="checkbox" id="cbtest" />
                 <input
                   className="px-2 text-xl bg-transparent outline-none"
-                  value={todo.tasks[0].content}
+                  value={task.content}
                   onChange={handleInputChange}
                 />
               </div>
