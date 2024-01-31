@@ -3,10 +3,13 @@ import "./CompStyles.css";
 import axios from "axios";
 
 const TodoBlock = () => {
-  const [task, setTask] = useState("");
+  const [tasks, setTasks] = useState([]);
   const [todos, setTodos] = useState([]);
+  const [title, setTitle] = useState("");
+
   const handleInputChange = (event) => {
-    setTask(event.target.value);
+    setTasks(event.target.value);
+    setTitle(event.target.value);
   };
 
   useEffect(() => {
@@ -21,19 +24,27 @@ const TodoBlock = () => {
   }, []);
 
   return (
-    <div className=" flex mt-20">
+    <div className=" flex mt-20 flex-wrap">
       {todos.map((todo) => (
         <div
           key={todo._id}
           className="todo-card border rounded-2xl h-[400px] w-[350px] flex flex-col mx-5 bg-blue-100"
         >
           <div className="title border-b border-gray-600 w-full flex justify-center bg-yellow-300 rounded-t-2xl">
-            <h1 className=" text-3xl my-1 ">{todo?.title}</h1>
+            <input
+              className=" text-3xl my-1 bg-transparent outline-none"
+              value={todo?.title}
+              onChange={handleInputChange}
+            />
           </div>
           <div className="tasks flex flex-col p-5">
             {todo?.tasks.map((task) => (
               <div key={task?._id}>
-                <input type="checkbox" id="cbtest" />
+                <input
+                  type="checkbox"
+                  id="cbtest"
+                  className=" cursor-pointer"
+                />
                 <input
                   className="px-2 text-xl bg-transparent outline-none"
                   value={task.content}

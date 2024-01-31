@@ -115,9 +115,13 @@ export const getTodos = async (req, res) => {
       .populate({
         path: "todos",
         model: "Todo",
+        populate: {
+          path: "tasks",
+          model: "Task",
+        },
       })
       .lean();
-
+      
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -128,6 +132,7 @@ export const getTodos = async (req, res) => {
       success: true,
       message: "All todos fetched successfully.",
       todos: user.todos,
+      tasks: user.todos.tasks,
     });
   } catch (error) {
     return res.status(500).json({
