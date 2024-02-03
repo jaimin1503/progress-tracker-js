@@ -3,13 +3,14 @@ import "./CompStyles.css";
 import axios from "axios";
 
 const TodoBlock = () => {
-  const [tasks, setTasks] = useState([]);
+  const [task, setTask] = useState("");
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
 
-  const handleInputChange = (event) => {
-    setTasks(event.target.value);
-    setTitle(event.target.value);
+  const handleInputChange = (todo_idx, index, updatedValue) => {
+    const updatedTodos = [...todos];
+    updatedTodos[todo_idx].tasks[index].content = updatedValue;
+    setTodos(updatedTodos);
   };
 
   useEffect(() => {
@@ -23,9 +24,28 @@ const TodoBlock = () => {
       });
   }, []);
 
+  const handleKeyPress = (event, todo_id, task_id) => {
+    if (event.key === "Enter") {
+      // Handle the Enter key press event (e.g., save the changes)
+      // For now, let's just log a message
+      axios
+        .put(
+          `http://localhost:5555/user/todos/${todo_id}/tasks/${task_id}`,
+          { todos },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          console.log(res.data.message);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+
   return (
     <div className=" flex mt-20 flex-wrap">
-      {todos.map((todo) => (
+      {todos.map((todo, todo_idx) => (
         <div
           key={todo._id}
           className="todo-card border rounded-2xl h-[400px] w-[350px] flex flex-col mx-5 bg-blue-100"
@@ -34,11 +54,11 @@ const TodoBlock = () => {
             <input
               className=" text-3xl my-1 bg-transparent outline-none"
               value={todo?.title}
-              onChange={handleInputChange}
+              onChange={(e) => setTitle(todo_idx, e.target.value)}
             />
           </div>
           <div className="tasks flex flex-col p-5">
-            {todo?.tasks.map((task) => (
+            {todo?.tasks.map((task, index) => (
               <div key={task?._id}>
                 <input
                   type="checkbox"
@@ -48,7 +68,10 @@ const TodoBlock = () => {
                 <input
                   className="px-2 text-xl bg-transparent outline-none"
                   value={task.content}
-                  onChange={handleInputChange}
+                  onChange={(e) =>
+                    handleInputChange(todo_idx, index, e.target.value)
+                  }
+                  onKeyDown={(e) => handleKeyPress(e, todo._id, task._id)}
                 />
               </div>
             ))}

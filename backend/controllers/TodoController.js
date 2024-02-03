@@ -141,3 +141,32 @@ export const getTodos = async (req, res) => {
     });
   }
 };
+
+export const editTask = async (req, res) => {
+  const { todoId, taskId } = req.params; // Extract todoId and taskId from the request parameters
+  const { content } = req.body; // Extract updated content and done status from the request body
+
+  try {
+    const todo = await Todo.findById(todoId);
+
+    if (!todo) {
+      return res.status(404).json({ message: 'Todo not found' });
+    }
+
+    const task = todo.tasks.id(taskId);
+
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found in the specified todo' });
+    }
+
+    task.content = content !== undefined ? content : task.content; // Update content if provided
+    task.done = done !== undefined ? done : task.done; // Update done status if provided
+
+    await todo.save(); // Save the changes
+
+    res.status(200).json({ message: 'Task updated successfully', updatedTask: task });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
