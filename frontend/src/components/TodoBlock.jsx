@@ -6,6 +6,7 @@ const TodoBlock = () => {
   const [task, setTask] = useState("");
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
+  const [updatedContent, setUpdatedContent] = useState("");
 
   const handleInputChange = (todo_idx, index, updatedValue) => {
     const updatedTodos = [...todos];
@@ -26,12 +27,10 @@ const TodoBlock = () => {
 
   const handleKeyPress = (event, todo_id, task_id) => {
     if (event.key === "Enter") {
-      // Handle the Enter key press event (e.g., save the changes)
-      // For now, let's just log a message
       axios
         .put(
           `http://localhost:5555/user/todos/${todo_id}/tasks/${task_id}`,
-          { todos },
+          { updatedContent },
           { withCredentials: true }
         )
         .then((res) => {
