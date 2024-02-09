@@ -6,7 +6,7 @@ const TodoBlock = () => {
   const [task, setTask] = useState("");
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
-  const [updatedContent, setUpdatedContent] = useState("");
+  // const [updatedContent, setUpdatedContent] = useState("");
 
   const handleInputChange = (todo_idx, index, updatedValue) => {
     const updatedTodos = [...todos];
@@ -25,12 +25,12 @@ const TodoBlock = () => {
       });
   }, []);
 
-  const handleKeyPress = (event, todo_id, task_id) => {
+  const handleKeyPress = (event, todo_id, task_id, updatedValue) => {
     if (event.key === "Enter") {
       axios
         .put(
           `http://localhost:5555/user/todos/${todo_id}/tasks/${task_id}`,
-          { updatedContent },
+          { content: updatedValue },
           { withCredentials: true }
         )
         .then((res) => {
@@ -58,19 +58,21 @@ const TodoBlock = () => {
           </div>
           <div className="tasks flex flex-col p-5">
             {todo?.tasks.map((task, index) => (
-              <div key={task?._id}>
+              <div key={task?._id} className="flex items-start">
                 <input
                   type="checkbox"
                   id="cbtest"
-                  className=" cursor-pointer"
+                  className=" cursor-pointer mt-2"
                 />
-                <input
+                <textarea
                   className="px-2 text-xl bg-transparent outline-none"
                   value={task.content}
                   onChange={(e) =>
                     handleInputChange(todo_idx, index, e.target.value)
                   }
-                  onKeyDown={(e) => handleKeyPress(e, todo._id, task._id)}
+                  onKeyDown={(e) =>
+                    handleKeyPress(e, todo._id, task._id, task.content)
+                  }
                 />
               </div>
             ))}

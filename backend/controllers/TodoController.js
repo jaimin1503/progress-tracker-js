@@ -145,7 +145,7 @@ export const getTodos = async (req, res) => {
 export const editTask = async (req, res) => {
   const { todoId, taskId } = req.params; // Extract todoId and taskId from the request parameters
   const { content } = req.body; // Extract updated content and done status from the request body
-  console.log(content);
+
   try {
     const todo = await Todo.findById(todoId);
 
