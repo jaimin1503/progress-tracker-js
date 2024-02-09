@@ -3,10 +3,7 @@ import "./CompStyles.css";
 import axios from "axios";
 
 const TodoBlock = () => {
-  const [isChecked, setIsChecked] = useState(false);
   const [todos, setTodos] = useState([]);
-  const [title, setTitle] = useState("");
-  // const [updatedContent, setUpdatedContent] = useState("");
 
   const handleInputChange = (todo_idx, index, updatedValue) => {
     const updatedTodos = [...todos];
@@ -18,11 +15,10 @@ const TodoBlock = () => {
     const updatedTodos = [...todos];
     updatedTodos[todo_idx].tasks[index].done = checked;
     setTodos(updatedTodos);
-    console.log(isChecked);
     axios
       .put(
         `http://localhost:5555/user/todos/${todo_id}/tasks/${task_id}`,
-        { done: isChecked },
+        { done: checked }, // Use 'checked' instead of 'isChecked'
         { withCredentials: true }
       )
       .then((res) => {
@@ -62,15 +58,15 @@ const TodoBlock = () => {
   };
 
   return (
-    <div className=" flex mt-20 flex-wrap">
+    <div className="flex mt-20 flex-wrap">
       {todos.map((todo, todo_idx) => (
         <div
           key={todo._id}
-          className="todo-card border rounded-2xl h-[400px] w-[350px] flex flex-col mx-5 bg-blue-100"
+          className="todo-card my-3 border rounded-2xl h-[400px] w-[350px] flex flex-col mx-5 bg-blue-100"
         >
           <div className="title border-b border-gray-600 w-full flex justify-center bg-yellow-300 rounded-t-2xl">
             <input
-              className=" text-3xl my-1 bg-transparent outline-none"
+              className="text-3xl my-1 bg-transparent outline-none"
               value={todo?.title}
               onChange={(e) => setTitle(todo_idx, e.target.value)}
             />
@@ -80,8 +76,9 @@ const TodoBlock = () => {
               <div key={task?._id} className="flex items-start">
                 <input
                   type="checkbox"
-                  id="cbtest"
-                  className=" cursor-pointer mt-2"
+                  id={`cb_${todo_idx}_${index}`}
+                  className="cursor-pointer mt-2"
+                  checked={task?.done}
                   onChange={(e) =>
                     handleCheckboxChange(
                       e.target.checked,
