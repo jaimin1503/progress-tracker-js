@@ -3,7 +3,7 @@ import "./CompStyles.css";
 import axios from "axios";
 
 const TodoBlock = () => {
-  const [task, setTask] = useState("");
+  const [isChecked, setIsChecked] = useState(false);
   const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState("");
   // const [updatedContent, setUpdatedContent] = useState("");
@@ -12,6 +12,25 @@ const TodoBlock = () => {
     const updatedTodos = [...todos];
     updatedTodos[todo_idx].tasks[index].content = updatedValue;
     setTodos(updatedTodos);
+  };
+
+  const handleCheckboxChange = (checked, todo_idx, index, todo_id, task_id) => {
+    const updatedTodos = [...todos];
+    updatedTodos[todo_idx].tasks[index].done = checked;
+    setTodos(updatedTodos);
+    console.log(isChecked);
+    axios
+      .put(
+        `http://localhost:5555/user/todos/${todo_id}/tasks/${task_id}`,
+        { done: isChecked },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log(res.data.message);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   useEffect(() => {
@@ -63,8 +82,17 @@ const TodoBlock = () => {
                   type="checkbox"
                   id="cbtest"
                   className=" cursor-pointer mt-2"
+                  onChange={(e) =>
+                    handleCheckboxChange(
+                      e.target.checked,
+                      todo_idx,
+                      index,
+                      todo._id,
+                      task._id
+                    )
+                  }
                 />
-                <textarea
+                <input
                   className="px-2 text-xl bg-transparent outline-none"
                   value={task.content}
                   onChange={(e) =>
