@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./CompStyles.css";
 import axios from "axios";
 
 const TodoBlock = () => {
   const [todos, setTodos] = useState([]);
+  const taskInputRefs = useRef([]);
 
   const handleInputChange = (todo_idx, index, updatedValue) => {
     const updatedTodos = [...todos];
@@ -50,6 +51,7 @@ const TodoBlock = () => {
         )
         .then((res) => {
           console.log(res.data.message);
+          addTask(todo_id);
         })
         .catch((error) => {
           console.error(error);
@@ -57,11 +59,11 @@ const TodoBlock = () => {
     }
   };
 
-  const addTask = (todoid) => {
-    if (todoid) {
+  const addTask = (todoId) => {
+    if (todoId) {
       axios
         .post(
-          `http://localhost:5555/user/todos/${todoid}/newtask`,
+          `http://localhost:5555/user/todos/${todoId}/newtask`,
           {},
           {
             withCredentials: true,
@@ -69,14 +71,19 @@ const TodoBlock = () => {
         )
         .then((res) => {
           const newTask = res.data.task;
-          const todoIndex = todos.findIndex((todo) => todo._id === todoid);
+          const todoIndex = todos.findIndex((todo) => todo._id === todoId);
           if (todoIndex !== -1) {
-            // If todo is found, update the todos state by adding the new task
             setTodos((prevTodos) => {
               const updatedTodos = [...prevTodos];
               updatedTodos[todoIndex].tasks.push(newTask);
               return updatedTodos;
             });
+            // Focus on the input field of the newly added task
+            const newTaskIndex = todos[todoIndex].tasks.length - 1; // Index of the newly added task
+            const inputRef = taskInputRefs.current[todoIndex][newTaskIndex];
+            if (inputRef) {
+              inputRef.focus();
+            }
           }
           console.log(res.data.message);
         })
@@ -123,6 +130,13 @@ const TodoBlock = () => {
                   }
                 />
                 <input
+                  ref={(el) => {
+                    // Store ref for each input field
+                    if (!taskInputRefs.current[todo_idx]) {
+                      taskInputRefs.current[todo_idx] = [];
+                    }
+                    taskInputRefs.current[todo_idx][index] = el;
+                  }}
                   className="px-2 text-xl bg-transparent outline-none"
                   value={task.content}
                   onChange={(e) =>
