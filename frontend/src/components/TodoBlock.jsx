@@ -57,6 +57,33 @@ const TodoBlock = () => {
     }
   };
 
+  const addTask = (todoid) => {
+    if (todoid) {
+      axios
+        .post(
+          `http://localhost:5555/user/todos/${todoid}/newtask`,
+          {},
+          {
+            withCredentials: true,
+          }
+        )
+        .then((res) => {
+          const newTask = res.data.task;
+          const todoIndex = todos.findIndex((todo) => todo._id === todoid);
+          if (todoIndex !== -1) {
+            // If todo is found, update the todos state by adding the new task
+            setTodos((prevTodos) => {
+              const updatedTodos = [...prevTodos];
+              updatedTodos[todoIndex].tasks.push(newTask);
+              return updatedTodos;
+            });
+          }
+          console.log(res.data.message);
+        })
+        .catch((error) => console.error(error));
+    }
+  };
+
   return (
     <div className="flex mt-20 flex-wrap">
       {todos.map((todo, todo_idx) => (
@@ -70,6 +97,12 @@ const TodoBlock = () => {
               value={todo?.title}
               onChange={(e) => setTitle(todo_idx, e.target.value)}
             />
+            <h1
+              onClick={() => addTask(todo._id)}
+              className=" text-3xl cursor-pointer text-gray-500 hover:text-black"
+            >
+              +
+            </h1>
           </div>
           <div className="tasks flex flex-col p-5">
             {todo?.tasks.map((task, index) => (

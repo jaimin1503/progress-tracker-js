@@ -23,4 +23,6 @@ const todoSchema = new mongoose.Schema(
 );
 
 const Todo = mongoose.model("Todo", todoSchema);
-export default Todo;
+const Task = mongoose.model("Task", taskSchema);
+
+export { Todo, Task };

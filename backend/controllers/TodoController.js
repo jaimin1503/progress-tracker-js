@@ -1,4 +1,4 @@
-import Todo from "../models/todoModel.js";
+import { Todo, Task } from "../models/todoModel.js";
 import User from "../models/userModel.js";
 
 export const newTodo = async (req, res) => {
@@ -172,5 +172,37 @@ export const editTask = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const newTask = async (req, res) => {
+  try {
+    const { todoid } = req.params;
+    if (!todoid) {
+      return res.status(400).json({
+        success: false,
+        message: "Todoid not found",
+      });
+    } else {
+      const task = await Task.create({
+        content: " ",
+        done: false,
+      });
+      await Todo.findByIdAndUpdate(
+        { _id: todoid },
+        { $push: { tasks: task } },
+        { new: true }
+      );
+      return res.status(200).json({
+        success: true,
+        message: "task created successfully ",
+        task,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `somethin went wrong while adding task and error is ${error}`,
+    });
   }
 };
