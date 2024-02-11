@@ -9,6 +9,7 @@ import {
   getTodos,
   editTask,
   newTask,
+  deleteTask,
 } from "../controllers/TodoController.js";
 
 router.post("/signup", signup);
@@ -19,5 +20,6 @@ router.put("/edittodo/:todoid", auth, editTodo);
 router.get("/gettodos", auth, getTodos);
 router.put("/todos/:todoId/tasks/:taskId", auth, editTask);
 router.post("/todos/:todoid/newtask", auth, newTask);
+router.post("/todos/:todoid/deletetask", auth, deleteTask);
 
 export default router;
