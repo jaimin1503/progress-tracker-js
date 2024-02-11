@@ -1,0 +1,37 @@
+/* Hide default checkbox */
+input[type="checkbox"] {
+  display: none;
+}
+
+/* Style label to resemble checkbox */
+label {
+  margin-top: 6.5px;
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  padding-left: 15px; /* Adjust based on your design */
+}
+
+/* Create custom checkbox */
+label:before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 18px; /* Size of custom checkbox */
+  height: 18px; /* Size of custom checkbox */
+  border-radius: 50%; /* Make it round */
+  border: 1px solid #000; /* Border color */
+  background-color: #fff; /* Background color */
+}
+
+/* Style checked state */
+input[type="checkbox"]:checked + label:before {
+  content: "\2713"; /* Unicode checkmark symbol */
+  font-size: 16px; /* Adjust size of checkmark */
+  text-align: center;
+  line-height: 16px; /* Adjust based on your design */
+  color: #fff; /* Color of checkmark */
+  background-color: rgb(68, 222, 73); /* Background color when checked */
+}

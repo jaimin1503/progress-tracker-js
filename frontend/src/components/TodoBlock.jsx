@@ -129,6 +129,7 @@ const TodoBlock = () => {
                     )
                   }
                 />
+                <label for={`cb_${todo_idx}_${index}`}></label>
                 <input
                   ref={(el) => {
                     // Store ref for each input field
