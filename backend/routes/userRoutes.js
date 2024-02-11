@@ -20,6 +20,6 @@ router.put("/edittodo/:todoid", auth, editTodo);
 router.get("/gettodos", auth, getTodos);
 router.put("/todos/:todoId/tasks/:taskId", auth, editTask);
 router.post("/todos/:todoid/newtask", auth, newTask);
-router.post("/todos/:todoid/deletetask", auth, deleteTask);
+router.delete("/todos/:todoid/deletetask/:taskId", auth, deleteTask);
 
 export default router;

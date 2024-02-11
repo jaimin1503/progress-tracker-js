@@ -12,6 +12,23 @@ const TodoBlock = () => {
     setTodos(updatedTodos);
   };
 
+  handleDelete = (event, todo_id, task_id) => {
+    if (event.key === "Delete" && !content) {
+      axios
+        .delete(
+          `http://localhost:5555/user/todos/${todo_id}/tasks/${task_id}`,
+          { withCredentials: true }
+        )
+        .then((res) => {
+          console.log(res.data.message);
+          addTask(todo_id);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+
   const handleCheckboxChange = (checked, todo_idx, index, todo_id, task_id) => {
     const updatedTodos = [...todos];
     updatedTodos[todo_idx].tasks[index].done = checked;
@@ -138,7 +155,9 @@ const TodoBlock = () => {
                     }
                     taskInputRefs.current[todo_idx][index] = el;
                   }}
-                  className="px-2 text-xl bg-transparent outline-none"
+                  className={`px-2 text-xl bg-transparent outline-none ${
+                    !task.done ? "" : " text-gray-400 line-through"
+                  }`}
                   value={task.content}
                   onChange={(e) =>
                     handleInputChange(todo_idx, index, e.target.value)
