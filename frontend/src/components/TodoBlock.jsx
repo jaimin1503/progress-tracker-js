@@ -66,6 +66,17 @@ const TodoBlock = () => {
         )
         .then((res) => {
           console.log(res.data.message);
+          setTodos((prevTodos) => {
+            const updatedTodos = [...prevTodos];
+            const todoIndex = updatedTodos.findIndex(
+              (todo) => todo._id === todo_id
+            );
+            // Remove the deleted task from the tasks array
+            updatedTodos[todoIndex].tasks = updatedTodos[
+              todoIndex
+            ].tasks.filter((task) => task._id !== task_id);
+            return updatedTodos;
+          });
         })
         .catch((error) => {
           console.error(error);

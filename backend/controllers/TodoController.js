@@ -222,14 +222,13 @@ export const deleteTask = async (req, res) => {
     }
 
     // Find the task inside the todo
-    const task = todo.tasks.id(taskId);
-    console.log(task);
-
-    if (!task) {
-      return res.status(404).json({ message: "Task not found" });
-    }
     await Task.findByIdAndDelete(taskId);
-    await Todo.findByIdAndUpdate({ _id: todoid });
+
+    await Todo.findByIdAndUpdate(
+      { _id: todoid },
+      { $pull: { tasks: { _id: taskId } } },
+      { new: true }
+    );
 
     return res.status(200).json({
       success: true,
