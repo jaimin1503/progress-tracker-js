@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./CompStyles.css";
 import axios from "axios";
+import deleteLogo from "../assets/delete.svg";
 
 const TodoBlock = () => {
   const [todos, setTodos] = useState([]);
@@ -10,6 +11,23 @@ const TodoBlock = () => {
     const updatedTodos = [...todos];
     updatedTodos[todo_idx].tasks[index].content = updatedValue;
     setTodos(updatedTodos);
+  };
+
+  const deleteTodo = (todoId) => {
+    axios
+      .post(
+        `http://localhost:5555/user/deletetodo/${todoId}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        console.log(res.data.message);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const handleCheckboxChange = (checked, todo_idx, index, todo_id, task_id) => {
@@ -39,7 +57,7 @@ const TodoBlock = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [deleteTodo]);
 
   const handleKeyPress = (event, todo_id, task_id, updatedValue) => {
     if (event.key === "Enter") {
@@ -123,18 +141,26 @@ const TodoBlock = () => {
           key={todo._id}
           className="todo-card my-3 border rounded-2xl h-[400px] w-[350px] flex flex-col mx-5 bg-blue-100"
         >
-          <div className="title border-b border-gray-600 w-full flex justify-center bg-yellow-300 rounded-t-2xl">
+          <div className="title border-b border-gray-600 bg-yellow-300 rounded-t-2xl flex px-5 justify-between">
             <input
-              className="text-3xl my-1 bg-transparent outline-none"
+              className="text-3xl my-1 bg-transparent outline-none w-[80%]"
               value={todo?.title}
               onChange={(e) => setTitle(todo_idx, e.target.value)}
             />
-            <h1
-              onClick={() => addTask(todo._id)}
-              className=" text-3xl cursor-pointer text-gray-500 hover:text-black"
-            >
-              +
-            </h1>
+            <div className=" flex flex-row-reverse">
+              <h1
+                onClick={() => addTask(todo._id)}
+                className=" text-3xl cursor-pointer text-gray-500 hover:text-black"
+              >
+                +
+              </h1>
+              <img
+                className=" mx-3 cursor-pointer"
+                src={deleteLogo}
+                alt="delete"
+                onClick={() => deleteTodo(todo._id)}
+              />
+            </div>
           </div>
           <div className="tasks flex flex-col p-5">
             {todo?.tasks.map((task, index) => (

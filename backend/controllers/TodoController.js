@@ -50,9 +50,9 @@ export const newTodo = async (req, res) => {
 };
 
 export const deleteTodo = async (req, res) => {
-  const id = req.params.todoid;
+  const {todoId} = req.params;
   try {
-    await Todo.findByIdAndDelete(id);
+    await Todo.findByIdAndDelete(todoId);
     return res.status(200).json({
       success: true,
       message: "todo is deleted success fully ",

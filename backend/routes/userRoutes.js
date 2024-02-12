@@ -15,7 +15,7 @@ import {
 router.post("/signup", signup);
 router.post("/login", login);
 router.post("/newtodo", auth, newTodo);
-router.post("/deletetodo/:todoid", auth, deleteTodo);
+router.post("/deletetodo/:todoId", auth, deleteTodo);
 router.put("/edittodo/:todoid", auth, editTodo);
 router.get("/gettodos", auth, getTodos);
 router.put("/todos/:todoId/tasks/:taskId", auth, editTask);
