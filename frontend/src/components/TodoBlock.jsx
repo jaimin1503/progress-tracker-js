@@ -12,23 +12,6 @@ const TodoBlock = () => {
     setTodos(updatedTodos);
   };
 
-  handleDelete = (event, todo_id, task_id) => {
-    if (event.key === "Delete" && !content) {
-      axios
-        .delete(
-          `http://localhost:5555/user/todos/${todo_id}/tasks/${task_id}`,
-          { withCredentials: true }
-        )
-        .then((res) => {
-          console.log(res.data.message);
-          addTask(todo_id);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  };
-
   const handleCheckboxChange = (checked, todo_idx, index, todo_id, task_id) => {
     const updatedTodos = [...todos];
     updatedTodos[todo_idx].tasks[index].done = checked;
@@ -60,6 +43,7 @@ const TodoBlock = () => {
 
   const handleKeyPress = (event, todo_id, task_id, updatedValue) => {
     if (event.key === "Enter") {
+      console.log(updatedValue);
       axios
         .put(
           `http://localhost:5555/user/todos/${todo_id}/tasks/${task_id}`,
@@ -68,7 +52,20 @@ const TodoBlock = () => {
         )
         .then((res) => {
           console.log(res.data.message);
-          addTask(todo_id);
+          // addTask(todo_id);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else if (event.key === "Backspace" && updatedValue === "") {
+      console.log(event.key);
+      axios
+        .delete(
+          `http://localhost:5555/user/todos/${todo_id}/deletetask/${task_id}`,
+          { withCredentials: true }
+        )
+        .then((res) => {
+          console.log(res.data.message);
         })
         .catch((error) => {
           console.error(error);
@@ -146,7 +143,7 @@ const TodoBlock = () => {
                     )
                   }
                 />
-                <label for={`cb_${todo_idx}_${index}`}></label>
+                <label htmlFor={`cb_${todo_idx}_${index}`}></label>
                 <input
                   ref={(el) => {
                     // Store ref for each input field

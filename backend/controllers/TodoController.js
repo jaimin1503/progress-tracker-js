@@ -146,9 +146,9 @@ export const editTask = async (req, res) => {
   const { todoId, taskId } = req.params; // Extract todoId and taskId from the request parameters
   const { content, done } = req.body; // Extract updated content and done status from the request body
 
-  if (!content) {
-    deleteTask(taskId);
-  }
+  // if (!content) {
+  //   deleteTask(taskId);
+  // }
   try {
     const todo = await Todo.findById(todoId);
 
@@ -211,19 +211,34 @@ export const newTask = async (req, res) => {
 };
 
 export const deleteTask = async (req, res) => {
-  const taskId = req.params;
+  const { todoid, taskId } = req.params;
+
   try {
-    if (taskId) {
-      await Task.findByIdAndDelete(taskId);
-      return res.status(200).json({
-        success: true,
-        message: "todo is deleted success fully ",
-      });
+    // Find the todo by ID
+    const todo = await Todo.findById(todoid);
+
+    if (!todo) {
+      return res.status(404).json({ message: "Todo not found" });
     }
+
+    // Find the task inside the todo
+    const task = todo.tasks.id(taskId);
+    console.log(task);
+
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    await Task.findByIdAndDelete(taskId);
+    await Todo.findByIdAndUpdate({ _id: todoid });
+
+    return res.status(200).json({
+      success: true,
+      message: "Task is deleted successfully",
+    });
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: `something went wrong while deleting todo and error is ${error}`,
+      message: `Something went wrong while deleting task and error is ${error}`,
     });
   }
 };
