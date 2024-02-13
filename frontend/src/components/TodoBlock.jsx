@@ -57,11 +57,10 @@ const TodoBlock = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, [deleteTodo]);
+  }, []);
 
   const handleKeyPress = (event, todo_id, task_id, updatedValue) => {
     if (event.key === "Enter") {
-      console.log(updatedValue);
       axios
         .put(
           `http://localhost:5555/user/todos/${todo_id}/tasks/${task_id}`,
@@ -76,7 +75,6 @@ const TodoBlock = () => {
           console.error(error);
         });
     } else if (event.key === "Backspace" && updatedValue === "") {
-      console.log(event.key);
       axios
         .delete(
           `http://localhost:5555/user/todos/${todo_id}/deletetask/${task_id}`,
