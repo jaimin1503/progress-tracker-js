@@ -4,14 +4,6 @@ import User from "../models/userModel.js";
 export const newTodo = async (req, res) => {
   try {
     const userId = req.user.userid;
-    const { title, tasks } = req.body;
-
-    if (!(userId && title && tasks)) {
-      return res.status(400).json({
-        success: false,
-        message: "Please provide user ID, title, and tasks for the new todo.",
-      });
-    }
 
     // Check if the user exists
     const user = await User.findById(userId);
@@ -25,8 +17,8 @@ export const newTodo = async (req, res) => {
 
     // Create a new todo
     const todo = await Todo.create({
-      title,
-      tasks,
+      title: "title",
+      tasks: [],
     });
 
     // Associate the new todo with the user
@@ -50,7 +42,7 @@ export const newTodo = async (req, res) => {
 };
 
 export const deleteTodo = async (req, res) => {
-  const {todoId} = req.params;
+  const { todoId } = req.params;
   try {
     await Todo.findByIdAndDelete(todoId);
     return res.status(200).json({
@@ -68,15 +60,12 @@ export const deleteTodo = async (req, res) => {
 export const editTodo = async (req, res) => {
   const id = req.params.todoid;
   try {
-    const { title, tasks } = req.body;
+    const { title } = req.body;
     const todo = await Todo.findById(id);
     if (todo) {
       const newTodo = {};
       if (title) {
         newTodo.title = title;
-      }
-      if (tasks) {
-        newTodo.tasks = tasks;
       }
 
       const updatedTodo = await Todo.findByIdAndUpdate(id, newTodo, {

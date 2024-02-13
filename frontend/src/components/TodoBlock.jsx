@@ -12,6 +12,11 @@ const TodoBlock = () => {
     updatedTodos[todo_idx].tasks[index].content = updatedValue;
     setTodos(updatedTodos);
   };
+  const handleTitleChange = (todo_idx, updatedValue) => {
+    const updatedTodos = [...todos];
+    updatedTodos[todo_idx].title = updatedValue;
+    setTodos(updatedTodos);
+  };
 
   const deleteTodo = (todoId) => {
     axios
@@ -22,6 +27,17 @@ const TodoBlock = () => {
           withCredentials: true,
         }
       )
+      .then((res) => {
+        console.log(res.data.message);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const addTodo = () => {
+    axios
+      .post(`http://localhost:5555/user/newtodo`, {}, { withCredentials: true })
       .then((res) => {
         console.log(res.data.message);
       })
@@ -59,6 +75,23 @@ const TodoBlock = () => {
       });
   }, []);
 
+  const handleKeyDown = (event, todo_id, updatedValue) => {
+    if (event.key === "Enter") {
+      axios
+        .put(
+          `http://localhost:5555/user/edittodo/${todo_id}`,
+          { title: updatedValue },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          console.log(res.data.message);
+          // addTask(todo_id);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
   const handleKeyPress = (event, todo_id, task_id, updatedValue) => {
     if (event.key === "Enter") {
       axios
@@ -134,6 +167,9 @@ const TodoBlock = () => {
 
   return (
     <div className="flex mt-10 flex-wrap">
+      <h1 onClick={addTodo} className=" pb-5">
+        Add Todo
+      </h1>
       {todos.map((todo, todo_idx) => (
         <div
           key={todo._id}
@@ -143,7 +179,8 @@ const TodoBlock = () => {
             <input
               className="text-3xl my-1 bg-transparent outline-none w-[80%]"
               value={todo?.title}
-              onChange={(e) => setTitle(todo_idx, e.target.value)}
+              onChange={(e) => handleTitleChange(todo_idx, e.target.value)}
+              onKeyDown={(e) => handleKeyDown(e, todo._id, todo.title)}
             />
             <div className=" flex flex-row-reverse">
               <h1
@@ -187,7 +224,7 @@ const TodoBlock = () => {
                     }
                     taskInputRefs.current[todo_idx][index] = el;
                   }}
-                  className={`px-2 text-xl bg-transparent outline-none ${
+                  className={`px-2 text-xl bg-transparent outline-none w-full ${
                     !task.done ? "" : " text-gray-400 line-through"
                   }`}
                   value={task.content}

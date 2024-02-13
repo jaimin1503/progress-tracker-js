@@ -16,6 +16,7 @@ const todoSchema = new mongoose.Schema(
     title: {
       type: String,
       trim: true,
+      default:"Title"
     },
     tasks: [taskSchema],
   },
