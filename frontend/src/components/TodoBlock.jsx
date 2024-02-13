@@ -133,7 +133,7 @@ const TodoBlock = () => {
   };
 
   return (
-    <div className="flex mt-20 flex-wrap">
+    <div className="flex mt-10 flex-wrap">
       {todos.map((todo, todo_idx) => (
         <div
           key={todo._id}

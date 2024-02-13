@@ -17,7 +17,7 @@ const SideBar = () => {
             onClick={() => handleComponentClick("TodoBlock")}
             className="font-medium text-lg cursor-pointer m-3 py-2 px-4 rounded-2xl flex hover:bg-blue-100"
           >
-            <p>New todo </p> <img className=" pl-2" src={todologo} alt="" />
+            <p>Todos </p> <img className=" pl-2" src={todologo} alt="" />
           </li>
           <li
             onClick={() => handleComponentClick("GoalBlock")}
