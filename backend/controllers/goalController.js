@@ -1,13 +1,33 @@
-import Goal from "../models/goalModel.js";
+import { Goal } from "../models/goalModel.js";
+import User from "../models/userModel.js";
 
 export const newGoal = async (req, res) => {
   try {
+    const { title, description, subjects, dueDate } = req.body;
+    const userId = req.user.userid;
+
+    // Check if the user exists
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
     const goal = await Goal.create({
-      title:"Set title",
-      description:"",
+      title,
+      description,
       subjects,
       dueDate,
     });
+
+    const updateUser = await User.findOneAndUpdate(
+      { _id: userId }, // Assuming profileid is the ID of the profile document you want to update
+      { $push: { goals: goal } }, // Corrected $push syntax
+      { new: true }
+    );
+
     return res.status(200).json({
       success: true,
       message: "The goal is set",
@@ -17,6 +37,51 @@ export const newGoal = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: `something went wrong while creating goal and error is ${error}`,
+    });
+  }
+};
+
+export const getGoals = async (req, res) => {
+  try {
+    const userId = req.user.userid;
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is missing in the request.",
+      });
+    }
+
+    const user = await User.findById(userId)
+      .populate({
+        path: "goals",
+        model: "Goal",
+        populate: {
+          path: "subjects",
+          model: "Subject",
+          populate: {
+            path: "topics",
+            model: "Topic",
+          },
+        },
+      })
+      .lean();
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found.",
+      });
+    }
+    console.log(user);
+    return res.status(200).json({
+      success: true,
+      message: "All goals fetched successfully.",
+      goals: user.goals,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: `Something went wrong while getting goals: ${error}`,
     });
   }
 };

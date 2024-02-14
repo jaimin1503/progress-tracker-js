@@ -2,7 +2,11 @@ import express from "express";
 const router = express.Router();
 import { auth } from "../middleware/auth.js";
 
-import { newGoal, updateStatus } from "../controllers/goalController.js";
+import {
+  getGoals,
+  newGoal,
+  updateStatus,
+} from "../controllers/goalController.js";
 
 router.post("/newgoal", auth, newGoal);
 router.put(
@@ -10,5 +14,6 @@ router.put(
   auth,
   updateStatus
 );
+router.get("/getgoals", auth, getGoals);
 
 export default router;

@@ -42,4 +42,7 @@ const goalSchema = new mongoose.Schema({
 });
 
 const Goal = mongoose.model("Goal", goalSchema);
-export default Goal;
+const Subject = mongoose.model("Subject", subjectSchema);
+const Topic = mongoose.model("Topic", topicSchema);
+
+export { Goal, Subject, Topic };

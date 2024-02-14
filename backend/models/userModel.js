@@ -21,6 +21,12 @@ const userSchema = new mongoose.Schema({
       ref: "Todo",
     },
   ],
+  goals: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Goal",
+    },
+  ],
 });
 const User = mongoose.model("User", userSchema);
 export default User;
