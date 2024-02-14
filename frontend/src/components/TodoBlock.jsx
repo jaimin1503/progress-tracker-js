@@ -29,6 +29,9 @@ const TodoBlock = () => {
       )
       .then((res) => {
         console.log(res.data.message);
+        setTodos((prevTodos) =>
+          prevTodos.filter((todo) => todo._id !== todoId)
+        );
       })
       .catch((error) => {
         console.error(error);
@@ -40,6 +43,7 @@ const TodoBlock = () => {
       .post(`http://localhost:5555/user/newtodo`, {}, { withCredentials: true })
       .then((res) => {
         console.log(res.data.message);
+        setTodos((prevTodos) => [...prevTodos, res.data.todo]);
       })
       .catch((error) => {
         console.error(error);
@@ -166,80 +170,88 @@ const TodoBlock = () => {
   };
 
   return (
-    <div className="flex mt-10 flex-wrap">
-      <h1 onClick={addTodo} className=" pb-5">
-        Add Todo
-      </h1>
-      {todos.map((todo, todo_idx) => (
-        <div
-          key={todo._id}
-          className="todo-card my-3 border rounded-2xl h-[400px] w-[350px] flex flex-col mx-5 bg-blue-100"
+    <div className=" flex flex-col">
+      <div>
+        <button
+          onClick={addTodo}
+          className=" m-5 text-xl cursor-pointer bg-blue-500 py-2 px-3 rounded-2xl"
         >
-          <div className="title border-b border-gray-600 bg-yellow-300 rounded-t-2xl flex px-5 justify-between">
-            <input
-              className="text-3xl my-1 bg-transparent outline-none w-[80%]"
-              value={todo?.title}
-              onChange={(e) => handleTitleChange(todo_idx, e.target.value)}
-              onKeyDown={(e) => handleKeyDown(e, todo._id, todo.title)}
-            />
-            <div className=" flex flex-row-reverse">
-              <h1
-                onClick={() => addTask(todo._id)}
-                className=" text-3xl cursor-pointer text-gray-500 hover:text-black"
-              >
-                +
-              </h1>
-              <img
-                className=" mx-3 cursor-pointer"
-                src={deleteLogo}
-                alt="delete"
-                onClick={() => deleteTodo(todo._id)}
+          Add Todo +
+        </button>
+      </div>
+      <div className="flex mt-10 flex-wrap">
+        {todos.map((todo, todo_idx) => (
+          <div
+            key={todo._id}
+            className="todo-card my-3 border rounded-2xl h-[400px] w-[300px] flex flex-col mx-5 bg-blue-100"
+          >
+            <div className="title border-b border-gray-600 bg-yellow-300 rounded-t-2xl flex px-5 justify-between">
+              <input
+                className="text-2xl my-1 bg-transparent outline-none w-[80%]"
+                value={todo?.title}
+                onChange={(e) => handleTitleChange(todo_idx, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(e, todo._id, todo.title)}
               />
-            </div>
-          </div>
-          <div className="tasks flex flex-col p-5">
-            {todo?.tasks.map((task, index) => (
-              <div key={task?._id} className="flex items-start">
-                <input
-                  type="checkbox"
-                  id={`cb_${todo_idx}_${index}`}
-                  className="cursor-pointer mt-2"
-                  checked={task?.done}
-                  onChange={(e) =>
-                    handleCheckboxChange(
-                      e.target.checked,
-                      todo_idx,
-                      index,
-                      todo._id,
-                      task._id
-                    )
-                  }
-                />
-                <label htmlFor={`cb_${todo_idx}_${index}`}></label>
-                <input
-                  ref={(el) => {
-                    // Store ref for each input field
-                    if (!taskInputRefs.current[todo_idx]) {
-                      taskInputRefs.current[todo_idx] = [];
-                    }
-                    taskInputRefs.current[todo_idx][index] = el;
-                  }}
-                  className={`px-2 text-xl bg-transparent outline-none w-full ${
-                    !task.done ? "" : " text-gray-400 line-through"
-                  }`}
-                  value={task.content}
-                  onChange={(e) =>
-                    handleInputChange(todo_idx, index, e.target.value)
-                  }
-                  onKeyDown={(e) =>
-                    handleKeyPress(e, todo._id, task._id, task.content)
-                  }
+              <div className=" flex flex-row-reverse">
+                <h1
+                  onClick={() => addTask(todo._id)}
+                  className=" text-3xl cursor-pointer text-gray-500 hover:text-black"
+                >
+                  +
+                </h1>
+                <img
+                  className=" mx-3 cursor-pointer"
+                  src={deleteLogo}
+                  alt="delete"
+                  onClick={() => deleteTodo(todo._id)}
                 />
               </div>
-            ))}
+            </div>
+            <div className="tasks flex flex-col p-5">
+              {todo?.tasks.map((task, index) => (
+                <div key={task?._id} className="flex items-start">
+                  <input
+                    type="checkbox"
+                    id={`cb_${todo_idx}_${index}`}
+                    className="cursor-pointer mt-2"
+                    checked={task?.done}
+                    onChange={(e) =>
+                      handleCheckboxChange(
+                        e.target.checked,
+                        todo_idx,
+                        index,
+                        todo._id,
+                        task._id
+                      )
+                    }
+                  />
+                  <label htmlFor={`cb_${todo_idx}_${index}`}></label>
+                  <input
+                    style={{ resize: "none" }}
+                    ref={(el) => {
+                      // Store ref for each input field
+                      if (!taskInputRefs.current[todo_idx]) {
+                        taskInputRefs.current[todo_idx] = [];
+                      }
+                      taskInputRefs.current[todo_idx][index] = el;
+                    }}
+                    className={`px-2 text-lg h-auto bg-transparent outline-none w-full ${
+                      !task.done ? "" : " text-gray-400 line-through"
+                    }`}
+                    value={task.content}
+                    onChange={(e) =>
+                      handleInputChange(todo_idx, index, e.target.value)
+                    }
+                    onKeyDown={(e) =>
+                      handleKeyPress(e, todo._id, task._id, task.content)
+                    }
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

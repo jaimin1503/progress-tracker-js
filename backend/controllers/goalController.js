@@ -2,17 +2,9 @@ import Goal from "../models/goalModel.js";
 
 export const newGoal = async (req, res) => {
   try {
-    const { title, description, subjects, dueDate } = req.body;
-    if (!(title && subjects && dueDate)) {
-      res.status(400).json({
-        success: false,
-        message: `please fill all the details`,
-      });
-      return;
-    }
     const goal = await Goal.create({
-      title,
-      description,
+      title:"Set title",
+      description:"",
       subjects,
       dueDate,
     });
