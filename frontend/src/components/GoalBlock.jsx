@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import {} from "react";
 
 const GoalBlock = () => {
   const [goals, setGoals] = useState([]);
@@ -23,6 +24,7 @@ const GoalBlock = () => {
       })
       .catch((error) => console.error(error));
   };
+
   return (
     <div>
       <div className="add-goal">
@@ -33,53 +35,60 @@ const GoalBlock = () => {
           Set new goal +
         </button>
       </div>
-      <div className="goal w-[82vw] bg-purple-50 rounded-2xl mx-auto">
-        {goals.map((goal, index) => (
-          <div key={goal._id} className=" py-10">
-            <div className=" flex flex-col items-center">
-              <h1 className=" text-3xl py-3 bg-blue-300 px-5 rounded-2xl">
-                {goal?.title}
-              </h1>
-              <p className=" py-2 pb-5">{goal?.description}</p>
-            </div>
-            <div className=" flex justify-around">
-              {goal?.subjects.map((subject, sub_idx) => (
-                <div
-                  key={subject._id}
-                  className=" max-w-xs bg-purple-100 rounded-2xl flex items-start"
-                >
-                  <div className=" flex my-5 flex-col items-start">
-                    <div className=" text-2xl py-3 px-5 rounded-2xl mx-auto bg-purple-300">
-                      {subject.title}
-                    </div>
-
-                    {subject?.topics.map((topic, tp_idx) => (
-                      <div
-                        key={topic._id}
-                        className="topics flex py-1 items-center mx-5 my-2"
-                      >
-                        <select
-                          name="status"
-                          id="status"
-                          value={topic?.status}
-                          className=" outline-none bg-transparent border border-purple-700 p-1 rounded-2xl"
-                        >
-                          <option value="Done">Done</option>
-                          <option value="Pending">Pending</option>
-                          <option value="Review">Review</option>
-                        </select>
-                        <h1 className="mx-3">
-                          {tp_idx} - {topic.title}
+      {goals && (
+        <div className="goal w-[82vw] bg-purple-50 rounded-2xl mx-auto">
+          {goals.map((goal, index) => (
+            <div key={goal._id} className=" py-10">
+              <div className=" flex flex-col items-center">
+                <h1 className=" text-3xl py-3 bg-blue-300 px-5 rounded-2xl">
+                  {goal?.title}
+                </h1>
+                <p className=" py-2 pb-5">{goal?.description}</p>
+              </div>
+              <div className=" flex justify-around">
+                {goal?.subjects.map((subject, sub_idx) => (
+                  <div
+                    key={subject._id}
+                    className=" max-w-xs bg-purple-100 rounded-2xl flex items-start"
+                  >
+                    <div className=" flex flex-col items-start">
+                      <div className="flex w-full">
+                        <h1 className=" absolute text-2xl m-5 px-2 cursor-pointer bg-purple-400 rounded-full">
+                          +
+                        </h1>
+                        <h1 className="text-2xl py-2 mb-5 px-5 mt-3 rounded-xl mx-auto bg-purple-300">
+                          {subject.title}
                         </h1>
                       </div>
-                    ))}
+
+                      {subject?.topics.map((topic, tp_idx) => (
+                        <div
+                          key={topic._id}
+                          className="topics flex py-1 items-center mx-5 my-2"
+                        >
+                          <select
+                            name="status"
+                            id="status"
+                            value={topic?.status}
+                            className=" outline-none bg-transparent border border-purple-700 p-1 rounded-lg"
+                          >
+                            <option value="Done">Done</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Review">Review</option>
+                          </select>
+                          <h1 className="mx-3">
+                            {tp_idx} - {topic.title}
+                          </h1>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
