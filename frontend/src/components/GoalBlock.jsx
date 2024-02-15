@@ -33,14 +33,45 @@ const GoalBlock = () => {
           Set new goal +
         </button>
       </div>
-      <div className="goal">
+      <div className="goal w-[80vw] bg-yellow-300">
         {goals.map((goal, index) => (
-          <div key={goal._id}>
-            <input className=" outline-none" value={goal.title} />
-            <h1>{goal?.subjects[0]?.title}</h1>
-            <h1>{goal?.subjects[1]?.title}</h1>
-            <h1>{goal?.subjects[0]?.topics[0]?.title}</h1>
-            <h1>{goal?.subjects[0]?.topics[1]?.title}</h1>
+          <div key={goal._id} className=" py-5">
+            <div className=" flex flex-col items-center">
+              <h1 className=" text-3xl py-3">{goal?.title}</h1>
+              <p className=" py-2 pb-5">{goal?.description}</p>
+            </div>
+            <div className="">
+              {goal?.subjects.map((subject, sub_idx) => (
+                <div
+                  key={subject._id}
+                  className=" bg-purple-200 max-w-xs flex items-start"
+                >
+                  <div className=" flex my-5 flex-col items-start">
+                    <div className=" text-2xl py-3 mx-auto">
+                      {sub_idx}-{subject.title}
+                    </div>
+
+                    {subject?.topics.map((topic, tp_idx) => (
+                      <div key={topic._id} className="topics flex py-3 mx-5">
+                        <select
+                          name="status"
+                          id="status"
+                          value={topic?.status}
+                          className=" outline-none bg-transparent border border-purple-700 p-1 rounded-2xl text-"
+                        >
+                          <option value="Done">Done</option>
+                          <option value="Pending">Pending</option>
+                          <option value="Review">Review</option>
+                        </select>
+                        <h1 className="mx-3">
+                          {tp_idx}-{topic.title}
+                        </h1>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
