@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {} from "react";
+import GoalForm from "../forms/GoalForm";
 
 const GoalBlock = () => {
   const [goals, setGoals] = useState([]);
@@ -36,7 +37,7 @@ const GoalBlock = () => {
         </button>
       </div>
       {goals && (
-        <div className="goal w-[82vw] bg-purple-50 rounded-2xl mx-auto">
+        <div className="goal w-[82vw] bg-blue-50 rounded-2xl mx-auto">
           {goals.map((goal, index) => (
             <div key={goal._id} className=" py-10">
               <div className=" flex flex-col items-center">
@@ -49,14 +50,14 @@ const GoalBlock = () => {
                 {goal?.subjects.map((subject, sub_idx) => (
                   <div
                     key={subject._id}
-                    className=" max-w-xs bg-purple-100 rounded-2xl flex items-start"
+                    className=" max-w-xs bg-blue-100 rounded-2xl flex items-start"
                   >
                     <div className=" flex flex-col items-start">
                       <div className="flex w-full">
-                        <h1 className=" absolute text-2xl m-5 px-2 cursor-pointer bg-purple-400 rounded-full">
+                        <h1 className=" absolute text-2xl m-5 px-2 cursor-pointer bg-blue-400 rounded-full">
                           +
                         </h1>
-                        <h1 className="text-2xl py-2 mb-5 px-5 mt-3 rounded-xl mx-auto bg-purple-300">
+                        <h1 className="text-2xl py-2 mb-5 px-5 mt-3 rounded-xl mx-auto bg-blue-300">
                           {subject.title}
                         </h1>
                       </div>
@@ -70,7 +71,7 @@ const GoalBlock = () => {
                             name="status"
                             id="status"
                             value={topic?.status}
-                            className=" outline-none bg-transparent border border-purple-700 p-1 rounded-lg"
+                            className=" outline-none bg-transparent border border-blue-700 p-1 rounded-lg"
                           >
                             <option value="Done">Done</option>
                             <option value="Pending">Pending</option>
@@ -89,6 +90,7 @@ const GoalBlock = () => {
           ))}
         </div>
       )}
+      <GoalForm />
     </div>
   );
 };

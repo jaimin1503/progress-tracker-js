@@ -3,7 +3,14 @@ import User from "../models/userModel.js";
 
 export const newGoal = async (req, res) => {
   try {
-    const { title, description, subjects, dueDate } = req.body;
+    const { title, description, dueDate } = req.body;
+
+    if (!(title && description && subjects && dueDate)) {
+      return res.status(404).json({
+        success: false,
+        message: "Provide all the required fields",
+      });
+    }
     const userId = req.user.userid;
 
     // Check if the user exists
@@ -18,7 +25,6 @@ export const newGoal = async (req, res) => {
     const goal = await Goal.create({
       title,
       description,
-      subjects,
       dueDate,
     });
 

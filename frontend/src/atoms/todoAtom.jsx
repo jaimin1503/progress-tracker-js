@@ -5,3 +5,7 @@ export const isOpenState = atom({
   default: null,
 });
 
+export const goalsState = atom({
+  key: "goalsState",
+  default: [{}],
+});
