@@ -48,10 +48,10 @@ const GoalBlock = () => {
         )}
       </div>
       {goals && (
-        <div className="goal w-[82vw] bg-blue-50 rounded-2xl mx-auto">
+        <div className="goal w-[82vw] mx-auto">
           {goals.map((goal, index) => (
-            <div key={goal._id} className="py-10">
-              <div className="flex flex-col items-center">
+            <div key={goal._id} className="py-10 bg-blue-50 my-5 rounded-2xl">
+              <div className="flex flex-col items-center ">
                 <h1 className="text-3xl py-3 bg-blue-300 px-5 rounded-2xl">
                   {goal?.title}
                 </h1>
