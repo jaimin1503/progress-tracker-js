@@ -5,7 +5,7 @@ export const newGoal = async (req, res) => {
   try {
     const { title, description, dueDate } = req.body;
 
-    if (!(title && description && subjects && dueDate)) {
+    if (!(title && description && dueDate)) {
       return res.status(404).json({
         success: false,
         message: "Provide all the required fields",
@@ -78,7 +78,6 @@ export const getGoals = async (req, res) => {
         message: "User not found.",
       });
     }
-    console.log(user);
     return res.status(200).json({
       success: true,
       message: "All goals fetched successfully.",

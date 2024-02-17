@@ -5,7 +5,12 @@ export const isOpenState = atom({
   default: null,
 });
 
+export const formShow = atom({
+  key: "formShow",
+  default: false,
+});
+
 export const goalsState = atom({
   key: "goalsState",
-  default: [{}],
+  default: [],
 });
