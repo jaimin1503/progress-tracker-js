@@ -17,7 +17,6 @@ const subjectSchema = new mongoose.Schema({
   title: {
     type: String,
     trim: true,
-    required: true,
   },
   status: {
     type: String,
@@ -31,7 +30,6 @@ const goalSchema = new mongoose.Schema({
   title: {
     type: String,
     trim: true,
-    required: true,
   },
   description: { type: String },
   subjects: [subjectSchema],

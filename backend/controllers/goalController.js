@@ -1,4 +1,4 @@
-import { Goal } from "../models/goalModel.js";
+import { Goal, Subject, Topic } from "../models/goalModel.js";
 import User from "../models/userModel.js";
 
 export const newGoal = async (req, res) => {
@@ -118,5 +118,61 @@ export const updateStatus = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const addTopic = async (req, res) => {
+  const { goalId, subjectId } = req.params;
+
+  if (!subjectId && !goalId) {
+    return res.status(400).json({
+      success: false,
+      message: "subject not found",
+    });
+  } else {
+    const subject = await Subject.findById(subjectId);
+
+    const topic = await Topic.create({
+      title: "Set title",
+      status: "Pending",
+    });
+    await Goal.findByIdAndUpdate(
+      { _id: goalId },
+      { $push: { subjects: subject, $push: { topics: topic } } },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "task created successfully ",
+      topic,
+    });
+  }
+};
+
+export const addSubject = async (req, res) => {
+  const { goalId } = req.params;
+
+  if (!goalId) {
+    return res.status(400).json({
+      success: false,
+      message: "goal not found",
+    });
+  } else {
+    const subject = await Subject.create({
+      title: "Set title",
+      status: "Pending",
+      topics: [],
+    });
+    await Goal.findByIdAndUpdate(
+      { _id: goalId },
+      { $push: { subjects: subject } },
+      { new: true }
+    );
+    return res.status(200).json({
+      success: true,
+      message: "subject created successfully ",
+      subject,
+    });
   }
 };
