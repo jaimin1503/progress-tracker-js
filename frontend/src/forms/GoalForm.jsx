@@ -43,8 +43,9 @@ const GoalForm = ({ setShowForm }) => {
   };
 
   return (
-    <div className="overlay" onClick={() => setShowForm(false)}>
+    <div className="overlay">
       <form
+        ref={formRef}
         onSubmit={handleSubmit}
         className="max-w-md mx-auto mt-8 p-4 bg-gray-100 rounded-lg shadow-md"
       >
