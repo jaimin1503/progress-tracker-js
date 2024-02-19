@@ -12,6 +12,7 @@ const TodoBlock = () => {
     updatedTodos[todo_idx].tasks[index].content = updatedValue;
     setTodos(updatedTodos);
   };
+
   const handleTitleChange = (todo_idx, updatedValue) => {
     const updatedTodos = [...todos];
     updatedTodos[todo_idx].title = updatedValue;

@@ -5,6 +5,7 @@ import { auth } from "../middleware/auth.js";
 import {
   addSubject,
   addTopic,
+  editTopic,
   getGoals,
   newGoal,
   updateStatus,
@@ -16,6 +17,7 @@ router.put(
   auth,
   updateStatus
 );
+router.put("/update-title/:goalId/:subjectIndex/:topicIndex", auth, editTopic);
 router.get("/getgoals", auth, getGoals);
 router.get("/:goalId/addsubject", auth, addSubject);
 router.get("/:goalId/:subjectId/addtopic", auth, addTopic);

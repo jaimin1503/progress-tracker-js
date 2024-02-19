@@ -180,3 +180,24 @@ export const updateStatus = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const editTopic = async (req, res) => {
+  const { goalId, subjectIndex, topicIndex } = req.params;
+  const newValue = req.body.newValue;
+  try {
+    const goal = await Goal.findById(goalId);
+
+    if (!goal) {
+      return res.status(404).json({ message: "Goal not found" });
+    }
+
+    goal.subjects[subjectIndex].topics[topicIndex].title = newValue;
+
+    await goal.save();
+
+    return res.json({ message: "title updated successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};

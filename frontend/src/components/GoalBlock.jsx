@@ -9,6 +9,18 @@ const GoalBlock = () => {
   const [showForm, setShowForm] = useRecoilState(formShow);
   const formRef = useRef(null);
 
+  const handleTitleChange = (
+    goal_idx,
+    subjectIndex,
+    topicIndex,
+    updatedValue
+  ) => {
+    const updatedGoals = [...goals];
+    updatedGoals[goal_idx].subjects[subjectIndex].topics[topicIndex].title =
+      updatedValue;
+    setGoals(updatedGoals);
+  };
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (formRef.current && !formRef.current.contains(event.target)) {
@@ -67,7 +79,6 @@ const GoalBlock = () => {
       })
       .catch((error) => console.error(error));
   };
-
   const updateStatus = (
     updatedStatus,
     goalId,
@@ -86,6 +97,28 @@ const GoalBlock = () => {
         fetchData();
       })
       .catch((error) => console.error(error));
+  };
+
+  const handleKeyPress = (
+    event,
+    goalId,
+    subjectIndex,
+    topicIndex,
+    updatedValue
+  ) => {
+    if (event.key === "Enter") {
+      axios
+        .put(
+          `http://localhost:5555/goal/update-title/${goalId}/${subjectIndex}/${topicIndex}`,
+          { newValue: updatedValue },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          console.log(res.data.message);
+          fetchData();
+        })
+        .catch((error) => console.error(error));
+    }
   };
 
   return (
@@ -126,7 +159,7 @@ const GoalBlock = () => {
                       key={subject._id}
                       className="max-w-xs bg-blue-100 rounded-2xl flex items-start"
                     >
-                      <div className="flex flex-col items-start w-[20vw]">
+                      <div className="flex flex-col items-start w-[25vw]">
                         <div className="flex w-full">
                           <h1
                             onClick={() =>
@@ -144,7 +177,7 @@ const GoalBlock = () => {
                         {subject?.topics.map((topic, tp_idx) => (
                           <div
                             key={topic._id}
-                            className="topics flex py-1 items-center mx-5 my-2"
+                            className="topics flex items-center mx-5 my-2"
                           >
                             <select
                               name="status"
@@ -165,9 +198,27 @@ const GoalBlock = () => {
                               <option value="Pending">Pending</option>
                               <option value="Review">Review</option>
                             </select>
-                            <h1 className="mx-3">
-                              {tp_idx} - {topic.title}
-                            </h1>
+                            <input
+                              className="mx-3 bg-transparent w-42 outline-none"
+                              value={topic.title}
+                              onChange={(e) =>
+                                handleTitleChange(
+                                  index,
+                                  sub_idx,
+                                  tp_idx,
+                                  e.target.value
+                                )
+                              }
+                              onKeyDown={(e) =>
+                                handleKeyPress(
+                                  e,
+                                  goal._id,
+                                  sub_idx,
+                                  tp_idx,
+                                  topic.title
+                                )
+                              }
+                            />
                           </div>
                         ))}
                       </div>
