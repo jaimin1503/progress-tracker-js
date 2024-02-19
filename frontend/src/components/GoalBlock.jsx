@@ -22,7 +22,7 @@ const GoalBlock = () => {
     };
   }, [showForm, setShowForm]);
 
-  useEffect(() => {
+  const fetchData = () => {
     axios
       .get(`http://localhost:5555/goal/getgoals`, { withCredentials: true })
       .then((res) => {
@@ -30,7 +30,11 @@ const GoalBlock = () => {
         console.log(res.data.message);
       })
       .catch((error) => console.error(error));
-  }, [setGoals]);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const addSubject = (goal_idx, goalId) => {
     axios
@@ -60,6 +64,26 @@ const GoalBlock = () => {
           updatedGoals[goal_idx].subjects[sub_idx].topics.push(newTopic);
           return updatedGoals;
         });
+      })
+      .catch((error) => console.error(error));
+  };
+
+  const updateStatus = (
+    updatedStatus,
+    goalId,
+    type,
+    subjectIndex,
+    topicIndex
+  ) => {
+    axios
+      .put(
+        `http://localhost:5555/goal/update-status/${goalId}/${type}/${subjectIndex}/${topicIndex}`,
+        { newStatus: updatedStatus },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log(res.data.message);
+        fetchData();
       })
       .catch((error) => console.error(error));
   };
@@ -126,6 +150,15 @@ const GoalBlock = () => {
                               name="status"
                               id="status"
                               value={topic?.status}
+                              onChange={(e) =>
+                                updateStatus(
+                                  e.target.value,
+                                  goal._id,
+                                  "topic",
+                                  sub_idx,
+                                  tp_idx
+                                )
+                              }
                               className="outline-none bg-transparent border border-blue-700 p-1 rounded-lg"
                             >
                               <option value="Done">Done</option>
