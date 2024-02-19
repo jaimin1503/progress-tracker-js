@@ -5,7 +5,7 @@ import { formShow, goalsState } from "../atoms/todoAtom";
 import GoalForm from "../forms/GoalForm";
 
 const GoalBlock = () => {
-  const [goals, setGoals] = useRecoilState(goalsState);
+  const [goals, setGoals] = useState([]);
   const [showForm, setShowForm] = useRecoilState(formShow);
   const formRef = useRef(null);
 
@@ -59,8 +59,9 @@ const GoalBlock = () => {
           const updatedGoals = [...prevGoals];
           updatedGoals[goal_idx].subjects[sub_idx].topics.push(newTopic);
           return updatedGoals;
-        }).catch((error) => console.error(error));
-      });
+        });
+      })
+      .catch((error) => console.error(error));
   };
 
   return (

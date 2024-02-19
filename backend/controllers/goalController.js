@@ -130,21 +130,25 @@ export const addTopic = async (req, res) => {
       message: "subject not found",
     });
   } else {
-    const subject = await Subject.findById(subjectId);
-
     const topic = await Topic.create({
       title: "Set title",
       status: "Pending",
     });
-    await Goal.findByIdAndUpdate(
-      { _id: goalId },
-      { $push: { subjects: subject, $push: { topics: topic } } },
+
+    await Goal.findOneAndUpdate(
+      { _id: goalId, "subjects._id": subjectId },
+      { $push: { "subjects.$.topics": topic } }
+    );
+
+    await Subject.findOneAndUpdate(
+      { _id: subjectId },
+      { $push: { topics: topic } },
       { new: true }
     );
 
     return res.status(200).json({
       success: true,
-      message: "task created successfully ",
+      message: "topic created successfully ",
       topic,
     });
   }
