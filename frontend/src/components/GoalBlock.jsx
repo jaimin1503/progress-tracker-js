@@ -157,7 +157,7 @@ const GoalBlock = () => {
                   goal?.subjects.map((subject, sub_idx) => (
                     <div
                       key={subject._id}
-                      className="max-w-xs bg-blue-100 rounded-2xl flex items-start"
+                      className="max-w-xs bg-blue-100 h-[40vh] overflow-y-scroll rounded-2xl flex items-start"
                     >
                       <div className="flex flex-col items-start w-[25vw]">
                         <div className="flex w-full">
@@ -177,7 +177,7 @@ const GoalBlock = () => {
                         {subject?.topics.map((topic, tp_idx) => (
                           <div
                             key={topic._id}
-                            className="topics flex items-center mx-5 my-2"
+                            className="topics flex items-center my-2 ml-10"
                           >
                             <select
                               name="status"
@@ -199,7 +199,7 @@ const GoalBlock = () => {
                               <option value="Review">Review</option>
                             </select>
                             <input
-                              className="mx-3 bg-transparent w-42 outline-none"
+                              className="ml-3 bg-transparent w-42 outline-none"
                               value={topic.title}
                               onChange={(e) =>
                                 handleTitleChange(
