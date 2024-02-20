@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { useRecoilState } from "recoil";
 import { formShow, goalsState } from "../atoms/todoAtom";
 import GoalForm from "../forms/GoalForm";
+import deleteLogo from "../assets/delete.svg";
 
 const GoalBlock = () => {
   const [goals, setGoals] = useState([]);
@@ -121,6 +122,20 @@ const GoalBlock = () => {
     }
   };
 
+  const deleteItem = (type, goalId, subjectId, topicId) => {
+    axios
+      .post(
+        `http://localhost:5555/goal/delete/${type}/${goalId}`,
+        { subjectId, topicId },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        console.log(res.data.message);
+        fetchData();
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <div>
       <div className="add-goal" ref={formRef}>
@@ -161,11 +176,16 @@ const GoalBlock = () => {
                     >
                       <div className="flex flex-col items-start w-[25vw]">
                         <div className="flex w-full">
+                          <img
+                            className=" float-right"
+                            src={deleteLogo}
+                            alt=""
+                          />
                           <h1
                             onClick={() =>
                               addTopic(index, sub_idx, goal._id, subject._id)
                             }
-                            className="absolute text-2xl m-5 px-2 cursor-pointer bg-blue-400 rounded-full"
+                            className=" text-2xl m-5 px-2 cursor-pointer bg-blue-400 rounded-full"
                           >
                             +
                           </h1>
@@ -177,8 +197,22 @@ const GoalBlock = () => {
                         {subject?.topics.map((topic, tp_idx) => (
                           <div
                             key={topic._id}
-                            className="topics flex items-center my-2 ml-10"
+                            className="topics flex items-center my-2"
                           >
+                            <img
+                              style={{ transition: "0.3s ease-in-out" }}
+                              className="px-2 opacity-10 hover:opacity-100 cursor-pointer"
+                              src={deleteLogo}
+                              alt="delete"
+                              onClick={() =>
+                                deleteItem(
+                                  "topic",
+                                  goal._id,
+                                  subject._id,
+                                  topic._id
+                                )
+                              }
+                            />
                             <select
                               name="status"
                               id="status"

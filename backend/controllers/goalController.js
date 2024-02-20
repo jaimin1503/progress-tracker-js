@@ -47,6 +47,74 @@ export const newGoal = async (req, res) => {
   }
 };
 
+export const deleteItem = async (req, res) => {
+  const { type, goalId } = req.params;
+  const { subjectId, topicId } = req.body;
+
+  try {
+    if (!(type && goalId)) {
+      return res.status(404).json({
+        success: false,
+        message: "Provide all the required fields",
+      });
+    }
+    switch (type) {
+      case "goal": {
+        try {
+          await Goal.findByIdAndDelete(goalId);
+          return res.status(200).json({
+            success: true,
+            message: "goal deleted success fully ",
+          });
+        } catch (error) {
+          return res.status(500).json({
+            success: false,
+            message: `something went wrong while deleting goal and error is ${error}`,
+          });
+        }
+      }
+      case "subject": {
+        try {
+          await Subject.findByIdAndDelete(subjectId);
+          await Goal.findByIdAndUpdate(
+            { _id: goalId },
+            { $pull: { subjects: { _id: subjectId } } },
+            { new: true }
+          );
+          return res.status(200).json({
+            success: true,
+            message: "subject deleted success fully ",
+          });
+        } catch (error) {
+          return res.status(500).json({
+            success: false,
+            message: `something went wrong while deleting subject and error is ${error}`,
+          });
+        }
+      }
+      case "topic": {
+        try {
+          await Topic.findByIdAndDelete(topicId);
+          await Goal.findOneAndUpdate(
+            { _id: goalId, "subjects._id": subjectId },
+            { $pull: { "subjects.$.topics": { _id: topicId } } },
+            { new: true }
+          );
+          return res.status(200).json({
+            success: true,
+            message: "topic deleted success fully ",
+          });
+        } catch (error) {
+          return res.status(500).json({
+            success: false,
+            message: `something went wrong while deleting topic and error is ${error}`,
+          });
+        }
+      }
+    }
+  } catch (error) {}
+};
+
 export const getGoals = async (req, res) => {
   try {
     const userId = req.user.userid;
@@ -107,7 +175,8 @@ export const addTopic = async (req, res) => {
 
     await Goal.findOneAndUpdate(
       { _id: goalId, "subjects._id": subjectId },
-      { $push: { "subjects.$.topics": topic } }
+      { $push: { "subjects.$.topics": topic } },
+      { new: true }
     );
 
     await Subject.findOneAndUpdate(
