@@ -64,6 +64,7 @@ const GoalBlock = () => {
         }).catch((error) => console.error(error));
       });
   };
+
   const addTopic = (goal_idx, sub_idx, goalId, subjectId) => {
     axios
       .get(`http://localhost:5555/goal/${goalId}/${subjectId}/addtopic`, {
@@ -80,6 +81,7 @@ const GoalBlock = () => {
       })
       .catch((error) => console.error(error));
   };
+
   const updateStatus = (
     updatedStatus,
     goalId,
@@ -145,6 +147,7 @@ const GoalBlock = () => {
         >
           Set new goal +
         </button>
+
         {showForm && (
           <div>
             <GoalForm setShowForm={setShowForm} />
@@ -155,24 +158,32 @@ const GoalBlock = () => {
         <div className="goal w-[82vw] mx-auto">
           {goals.map((goal, index) => (
             <div key={goal._id} className="py-10 bg-blue-50 my-5 rounded-2xl">
-              <h1
-                onClick={() => addSubject(index, goal._id)}
-                className=" mx-5 bg-blue-300 cursor-pointer w-fit px-5 py-2 absolute rounded-2xl"
-              >
-                Add new Subject +
-              </h1>
+              <div className=" flex absolute">
+                <h1
+                  onClick={() => addSubject(index, goal._id)}
+                  className=" mx-5 bg-blue-300 cursor-pointer w-fit px-5 py-2 absolut rounded-2xl"
+                >
+                  Add new Subject +
+                </h1>
+                <img
+                  onClick={() => deleteItem("goal", goal._id)}
+                  className=" cursor-pointer"
+                  src={deleteLogo}
+                  alt=""
+                />
+              </div>
               <div className="flex flex-col items-center ">
                 <h1 className="text-3xl py-3 bg-blue-300 px-5 rounded-2xl">
                   {goal?.title}
                 </h1>
                 <p className="py-2 pb-5">{goal?.description}</p>
               </div>
-              <div className="flex justify-around">
+              <div className="flex justify-between flex-wrap">
                 {goal.subjects &&
                   goal?.subjects.map((subject, sub_idx) => (
                     <div
                       key={subject._id}
-                      className="max-w-xs bg-blue-100 h-[40vh] overflow-y-scroll rounded-2xl flex items-start"
+                      className="max-w-xs bg-blue-100 h-[40vh] overflow-y-scroll mx-5 my-5 rounded-2xl flex items-start"
                     >
                       <div className="flex flex-col items-start w-[25vw]">
                         <div className=" w-full items-center justify-between">
@@ -189,9 +200,12 @@ const GoalBlock = () => {
                               <h1>{subject.title}</h1>
                             </div>
                             <img
-                              className=" mr-5"
+                              className=" mr-5 cursor-pointer"
                               src={deleteLogo}
                               alt="delete"
+                              onClick={() =>
+                                deleteItem("subject", goal._id, subject._id)
+                              }
                             />
                           </div>
                         </div>
@@ -203,7 +217,7 @@ const GoalBlock = () => {
                           >
                             <img
                               style={{ transition: "0.3s ease-in-out" }}
-                              className="px-2 opacity-10 hover:opacity-100 cursor-pointer"
+                              className="px-2 opacity-5 hover:opacity-100 cursor-pointer"
                               src={deleteLogo}
                               alt="delete"
                               onClick={() =>
