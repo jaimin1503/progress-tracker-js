@@ -175,18 +175,24 @@ const GoalBlock = () => {
                       className="max-w-xs bg-blue-100 h-[40vh] overflow-y-scroll rounded-2xl flex items-start"
                     >
                       <div className="flex flex-col items-start w-[25vw]">
-                        <div className="flex w-full items-center bg-purple-100 justify-between">
-                          <h1
-                            onClick={() =>
-                              addTopic(index, sub_idx, goal._id, subject._id)
-                            }
-                            className="ml-5  text-2xl cursor-pointer bg-blue-400 rounded-full"
-                          >
-                            +
-                          </h1>
-                          <img className=" " src={deleteLogo} alt="" />
-                          <div className="text-2xl py-2 mb-5 w-full px-5 mt-3 rounded-xl bg-blue-300">
-                            <h1>{subject.title}</h1>
+                        <div className=" w-full items-center justify-between">
+                          <div className=" flex justify-between items-center my-3">
+                            <h1
+                              onClick={() =>
+                                addTopic(index, sub_idx, goal._id, subject._id)
+                              }
+                              className="text-2xl cursor-pointer rounded-full ml-5"
+                            >
+                              +
+                            </h1>
+                            <div className="text-2xl py-2 px-5 flex justify-center rounded-xl bg-blue-300">
+                              <h1>{subject.title}</h1>
+                            </div>
+                            <img
+                              className=" mr-5"
+                              src={deleteLogo}
+                              alt="delete"
+                            />
                           </div>
                         </div>
 
