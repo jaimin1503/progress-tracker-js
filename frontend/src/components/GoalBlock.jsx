@@ -4,6 +4,8 @@ import { useRecoilState } from "recoil";
 import { formShow, goalsState } from "../atoms/todoAtom";
 import GoalForm from "../forms/GoalForm";
 import deleteLogo from "../assets/delete.svg";
+import ProgressBar from "./ProgressBar";
+import { calculateProgress } from "../utils/goal";
 
 const GoalBlock = () => {
   const [goals, setGoals] = useState([]);
@@ -140,6 +142,9 @@ const GoalBlock = () => {
 
   return (
     <div>
+      <div>
+        <ProgressBar progress={90} width="300px" height="20px" color="green" />
+      </div>
       <div className="add-goal" ref={formRef}>
         <button
           onClick={() => setShowForm(!showForm)}
@@ -169,7 +174,7 @@ const GoalBlock = () => {
                   onClick={() => deleteItem("goal", goal._id)}
                   className=" cursor-pointer"
                   src={deleteLogo}
-                  alt=""
+                  alt="delete"
                 />
               </div>
               <div className="flex flex-col items-center ">
