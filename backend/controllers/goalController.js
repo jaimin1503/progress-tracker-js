@@ -270,3 +270,31 @@ export const editTopic = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+export const getCount = async (req, res) => {
+  const { subjectId } = req.params;
+
+  try {
+    const subject = await Subject.findById(subjectId);
+
+    if (!subject) {
+      return res.status(404).json({ error: "Subject not found" });
+    }
+
+    const doneTopicsCount = subject.topics.reduce((count, topic) => {
+      if (topic.status === "Done") {
+        return count + 1;
+      }
+      return count;
+    }, 0);
+
+    console.log(doneTopicsCount);
+    res.status(200).json({ count: doneTopicsCount });
+  } catch (error) {
+    console.error(
+      'Error counting topics with status "Done" for the subject:',
+      error
+    );
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};

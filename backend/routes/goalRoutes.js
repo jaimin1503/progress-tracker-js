@@ -7,6 +7,7 @@ import {
   addTopic,
   deleteItem,
   editTopic,
+  getCount,
   getGoals,
   newGoal,
   updateStatus,
@@ -23,5 +24,6 @@ router.get("/getgoals", auth, getGoals);
 router.get("/:goalId/addsubject", auth, addSubject);
 router.get("/:goalId/:subjectId/addtopic", auth, addTopic);
 router.post("/delete/:type/:goalId", auth, deleteItem);
+router.get("/getcount/:subjectId", auth, getCount);
 
 export default router;

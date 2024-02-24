@@ -143,7 +143,12 @@ const GoalBlock = () => {
   return (
     <div>
       <div>
-        <ProgressBar progress={90} width="300px" height="20px" color="green" />
+        <ProgressBar
+          progress={90}
+          width="300px"
+          height="20px"
+          color="lightblue"
+        />
       </div>
       <div className="add-goal" ref={formRef}>
         <button
@@ -163,6 +168,7 @@ const GoalBlock = () => {
         <div className="goal w-[82vw] mx-auto">
           {goals.map((goal, index) => (
             <div key={goal._id} className="py-10 bg-blue-50 my-5 rounded-2xl">
+              <h1>{goal?.subjects?.topics?.length}</h1>
               <div className=" flex absolute">
                 <h1
                   onClick={() => addSubject(index, goal._id)}
@@ -190,6 +196,7 @@ const GoalBlock = () => {
                       key={subject._id}
                       className="max-w-xs bg-blue-100 h-[40vh] overflow-y-scroll mx-5 my-5 rounded-2xl flex items-start"
                     >
+                      {subject.topics.length}
                       <div className="flex flex-col items-start w-[25vw]">
                         <div className=" w-full items-center justify-between">
                           <div className=" flex justify-between items-center my-3">
