@@ -233,9 +233,29 @@ export const updateStatus = async (req, res) => {
 
     // Update status based on type
     if (type === "subject") {
+      // Update status in goal
       goal.subjects[subjectIndex].status = newStatus;
+
+      // Update status in individual subject
+      const subjectId = goal.subjects[subjectIndex]._id;
+      const subject = await Subject.findById(subjectId);
+      if (!subject) {
+        return res.status(404).json({ message: "Subject not found" });
+      }
+      subject.status = newStatus;
+      await subject.save();
     } else if (type === "topic") {
+      // Update status in goal
       goal.subjects[subjectIndex].topics[topicIndex].status = newStatus;
+
+      // Update status in individual topic
+      const topicId = goal.subjects[subjectIndex].topics[topicIndex]._id;
+      const topic = await Topic.findById(topicId);
+      if (!topic) {
+        return res.status(404).json({ message: "Topic not found" });
+      }
+      topic.status = newStatus;
+      await topic.save();
     } else {
       return res.status(400).json({ message: "Invalid type" });
     }
